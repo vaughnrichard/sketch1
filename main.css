@@ -6,6 +6,18 @@ header {
   /* line-height: 0px; */
 }
 
+#words {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.word {
+  display: flex;
+  flex-wrap: nowrap;
+  /* width: 100%; */
+}
+
 body {
   background-color: rgb(255, 255, 255);
 }
@@ -25,5 +37,15 @@ body {
 }
 
 #endingCitation {
+  text-align: center;
+}
+
+#mobileInputDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#mobileInput {
   text-align: center;
 }

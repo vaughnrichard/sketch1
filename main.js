@@ -206,12 +206,42 @@ document.addEventListener('keydown', function (event) {
 /*** ----- Init Function ----- ***/
 
 /**
- * This function adds some are to the web page by generating
- * 
+ * This function would add some are to the web page by generating
+ * text at the top. Don't know if I want to develop it
  */
 // function initWebPage() {
-
 // }
+
+
+/**
+ * This function immediately puts the focus onto an input element.
+ * This allows mobile users to use the website.
+ */
+function initMobileKeyboard() {
+  // Detect if user is on mobile device. Copied from ChatGPT
+  function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
+
+  const mobileInput = document.getElementById('mobileInput');
+
+  if (!isMobileDevice()) {
+    mobileInput.style.visibility = 'hidden';
+    return;
+  }
+
+  mobileInput.addEventListener('focus', () => {
+    mobileInput.style.opacity = '0%';
+
+    mobileInput.addEventListener('focusout', () => {
+      mobileInput.value = '';
+      mobileInput.style.opacity = '100%';
+    });
+  });
+}
+
+// call the init function
+initMobileKeyboard();
 
 /*** ----- End Init Function ----- ***/
 
