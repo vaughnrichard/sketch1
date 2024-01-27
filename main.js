@@ -241,6 +241,7 @@ function initMobileKeyboard() {
 
   // otherwise event listener time
   const mobilInstr = document.getElementById('instr');
+  mobilInstr.textContent = 'Instructions: Simply start typing. (Tap the textbox)'
   mobileInput.addEventListener('focus', () => {
     mobileInput.style.opacity = '0%'; // make invisible, but able to be typed in
     mobilInstr.textContent = 'Instructions: Simply start typing. Tap the screen to display the text box.'; // update intructions for UX
