@@ -1,60 +1,64 @@
 /* some minor fixes to get the desired look on the webpage */
 
+/* I need a flex header to get everythin on the same line */
 header {
   display: flex;
+  flex-wrap: nowrap;
   width: 100%;
-  /* line-height: 0px; */
 }
 
+/* The words div should be a multi-line wrap, which is what this does */
 #words {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
 }
 
+/* But each individual word should not be an individual line */
 .word {
   display: flex;
   flex-wrap: nowrap;
-  /* width: 100%; */
 }
 
+/* Nothing special here */
 body {
   background-color: rgb(255, 255, 255);
 }
 
+/* This deals with displaying all the letters. A flex display does the trick */
 #displayDiv {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
-  /* background-color: bisque; */
-  align-items: center;
+  align-items: center; /* This line makes sure all the letters are centered vertically */
 }
 
+/* Some simple stylistic edits */
 #nameHeader {
   background-color: black;
   color: lime;
 }
 
+/* Don't think I actually need this anymore */
 #instrDiv {
   display: flex;
   flex-wrap: nowrap;
 }
 
-/* #mobileInstr {
-  visibility: hidden;
-} */
-
+/* center the text in there */
 #endingCitation {
   text-align: center;
 }
 
+/* This did the trick! This centers the mobile input element. Flex / justify likely did it */
 #mobileInputDiv {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Just make sure the text is centered, looks better */
 #mobileInput {
   text-align: center;
 }

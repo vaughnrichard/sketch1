@@ -8,7 +8,7 @@
 -- append to displayDiv (make sure dispayDiv has the correct props in CSS)
 */
 
-/*** ------ Global Vars ----- ***/
+/*** ------ Global Vars ----- ***/ // all of these are self explanatory
 const componentLen = 5;
 
 const fontSizeIndex = 0;
@@ -21,8 +21,8 @@ const marginIndex = 4;
 
 /** This function shalle generate the modifiers of the character to
  *  appear on the webpage. It shall take nothing and return an array
- *  of length (??), corresponding to the generated features. The 
- *  return array will be of the form []. The components are randomly
+ *  of length component length, corresponding to the generated features. The 
+ *  return array can be infered from the global vars. The components are randomly
  *  generated.
  * @returns Array of Components
  */
@@ -164,8 +164,12 @@ function inputToAppend(character) {
 
   appendToDiv(charDiv); // append the chararacter div to the display div
 
-  const style = window.getComputedStyle(charDiv);
-  const newColors = setAppropriateColors(style.color, style.backgroundColor);
+  // these next steps are done to make sure the character is readable,
+  // i.e. the text color and background color are not too similar
+  const style = window.getComputedStyle(charDiv); // get the style - AFTER APPENDING
+  const newColors = setAppropriateColors(style.color, style.backgroundColor); // - find valid colors
+
+  //set the new colors
   charDiv.style.color = newColors[0];
   charDiv.style.backgroundColor = newColors[1];
 }
@@ -184,19 +188,23 @@ const bannedKeyEvents = [
  */
 document.addEventListener('keydown', function (event) {
   
+  // don't allow these keys to be added
   if (bannedKeyEvents.includes(event.key)) {
     return;
   }
 
+  // backspace means a div should be deleted
   if (event.key === 'Backspace') {
     const displayDiv = document.getElementById('displayDiv');
     
+    // remove iff there exists one to remove
     if (displayDiv.children.length > 0) {
       displayDiv.removeChild( displayDiv.children[ displayDiv.children.length - 1] );
     }
-    return;
+    return; // terminate early so a 'backspace' char isnt added
   }
 
+  // this is added for UX. prevents the tab from jumping around the page. GPT helped out
   if (event.key === 'Tab') { event.preventDefault(); }
 
   inputToAppend(event.key);
@@ -225,20 +233,22 @@ function initMobileKeyboard() {
 
   const mobileInput = document.getElementById('mobileInput');
 
+  // if not mobile, then hide this input field
   if (!isMobileDevice()) {
     mobileInput.style.visibility = 'hidden';
     return;
   }
 
+  // otherwise event listener time
   const mobilInstr = document.getElementById('instr');
   mobileInput.addEventListener('focus', () => {
-    mobileInput.style.opacity = '0%';
-    mobilInstr.textContent = 'Instructions: Simply start typing. Tap the screen to display the text box.';
+    mobileInput.style.opacity = '0%'; // make invisible, but able to be typed in
+    mobilInstr.textContent = 'Instructions: Simply start typing. Tap the screen to display the text box.'; // update intructions for UX
 
     mobileInput.addEventListener('focusout', () => {
-      mobileInput.value = '';
-      mobileInput.style.opacity = '100%';
-      mobilInstr.textContent = 'Instructions: Simply start typing.';
+      mobileInput.value = ''; // reset value - no reason to have whatever the typed in there
+      mobileInput.style.opacity = '100%'; // make visible again
+      mobilInstr.textContent = 'Instructions: Simply start typing.'; // update instructions
     });
   });
 }
@@ -285,18 +295,23 @@ function gaussianRandom() {
  * @returns euclidian distance between two RGB vectors (number)
  */
 function colorDifference(rgb1, rgb2) {
-  const rDiff = rgb1.R - rgb2.R;
+  const rDiff = rgb1.R - rgb2.R; // pretty self explanatory
   const gDiff = rgb1.G - rgb2.G;
   const bDiff = rgb1.B - rgb2.B;
 
   const diff =  Math.sqrt(rDiff * rDiff + gDiff * gDiff + bDiff * bDiff);
-  return (diff === NaN) ? 0 : diff;
+  return (diff === NaN) ? 0 : diff; // me own line. NaN's were being generated
 }
 
 
-// GPT vvvvv
+/**
+ * This function takes a color represented as an rgb string (see params)
+ * and parses it into a JSON object with int in the R,G,B components.
+ * @param {string} color - of the form 'rgb(r,b,g)'
+ * @returns 
+ */
 function convertCSSColorToRGB(color) {
-  // Extract RGB components from the "rgb()" string
+  // Extract RGB components from the "rgb()" string. Props to GPT on this one
   const matches = color.match(/\d+/g);
   if (matches) {
       return {
@@ -311,37 +326,44 @@ function convertCSSColorToRGB(color) {
 
 
 /**
- * This funcion takes two colors, the color of the text and the background color of the div
- * and ensures they are different enough to 
- * @param {*} textColor 
- * @param {*} backgroundColor 
+ * This function takes two colors, the color of the text and the background color of the div
+ * and ensures they are different enough for people to see them.
+ * NOTE: needs some improvement in the difference algorithm.
+ * @param {string} textColor - of the form 'rgb(R1,G1,B1)'
+ * @param {string} backgroundColor - of the form 'rgb(R2,G2,B2)'
  * @returns array of two elements of the form [newTextColor, backgroundColor]
  */
 function setAppropriateColors(textColor, backgroundColor) {
+  // convert to numerical forms {R,G,B}
   const textRGB = convertCSSColorToRGB(textColor);
   const backgroundRGB = convertCSSColorToRGB(backgroundColor);
 
+  // error handling. ensure the above function returned a valid result.
   if (textRGB === null || backgroundRGB === null) {
     console.log("setAppropriateColors: Error converting CSS color to RGB array.");
     return [textColor, backgroundColor];
   }
 
+  // if different enough, keep the original colors
   if ( colorDifference(textRGB, backgroundRGB) > 180) { return [textColor, backgroundColor]; }
 
-  else {
+  else { // need to change the colors
+    // try negating one of the colors
     const negatedTextRGB = { R: 255 - textRGB.R, G: 255 - textRGB.G, B: 255 - textRGB.B};
 
+    // if they are not different enough, they must be very similar on each R,G,B component. Thus
+    // making them an extreme {black, white} should suffice to make them viewable.
     if ( colorDifference(negatedTextRGB, backgroundRGB)  < 180) {
       
       const black = 'rgb(0,0,0)';
       const white = 'rgb(255, 255, 255)';
 
+      // flip a coin to see what is picked.
       if (Math.random() < 0.5) { return [black, backgroundColor]; }
       else { return [white, backgroundColor]; }
 
-    } else {
+    } else { // they were different enough! return the new colors.
       const returnTextRGB = 'rgb(' + negatedTextRGB.R + ',' + negatedTextRGB.G + ',' + negatedTextRGB.B + ')';
-      // const returnBackgroundRGB = 'rgb(' + backgroundRGB.R + ',' + backgroundRGB.G + ',' + backgroundRGB.B + ')';
       return [returnTextRGB, backgroundColor];
     }
   }
