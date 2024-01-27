@@ -9,13 +9,13 @@
 */
 
 /*** ------ Global Vars ----- ***/
-const componentLen = 4;
+const componentLen = 5;
 
 const fontSizeIndex = 0;
 const textColorIndex = 1;
 const rotationIndex = 2;
 const backgroundColorIndex = 3;
-// add padding variable
+const marginIndex = 4;
 // maybe something to not make the div a square? instead a trapezoid?
 /*** ------------------------ ***/
 
@@ -69,6 +69,16 @@ function generateComponents() {
     return (val < 0) ? val + 360 : val;
   }
 
+
+  /**
+   * This function generates a random margin value between 0 and 4.
+   * @returns integer between 0 and 4
+   */
+  function generateRandomMarginNum() {
+    const randomMargin = Math.round( clamp(-2, gaussianRandom() * 2, 2) );
+    return randomMargin;
+  }
+
   // return array
   const components = new Array(componentLen);
 
@@ -77,6 +87,8 @@ function generateComponents() {
   components[textColorIndex] = generateRandomColor();
   components[rotationIndex] = generateRandomRotation();
   components[backgroundColorIndex] = generateRandomColor();
+  components[marginIndex] = generateRandomMarginNum();
+
   return components;
 }
 
@@ -116,6 +128,8 @@ function createCharacterDiv(componentArray, character) {
   characterDiv.style.transform = 'rotate(' + componentArray[rotationIndex] + 'deg)';  // Set the rotation
 
   characterDiv.style.backgroundColor = componentArray[backgroundColorIndex];
+
+  characterDiv.style.marginRight = componentArray[marginIndex] + 'px';
   /* --- end adding properties --- */
 
   // set the character to the correct one!
@@ -149,12 +163,19 @@ function inputToAppend(character) {
   const charDiv = createCharacterDiv(components, character);
 
   appendToDiv(charDiv); // append the chararacter div to the display div
+
+  const style = window.getComputedStyle(charDiv);
+  const newColors = setAppropriateColors(style.color, style.backgroundColor);
+  charDiv.style.color = newColors[0];
+  charDiv.style.backgroundColor = newColors[1];
 }
 
 /*** ----- Character Detection ---- ***/
 // disallowed key events
 const bannedKeyEvents = [
-  'Meta', 'Shift'
+  'Meta', 'Shift', 'Control', 'Alt', 'CapsLock', 'Escape',
+  'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10',
+  'F11', 'F12', 'F13', 'F14', 'F15'
 ];
 
 /**
@@ -163,7 +184,6 @@ const bannedKeyEvents = [
  */
 document.addEventListener('keydown', function (event) {
   
-  console.log(event.key);
   if (bannedKeyEvents.includes(event.key)) {
     return;
   }
@@ -194,3 +214,130 @@ document.addEventListener('keydown', function (event) {
 // }
 
 /*** ----- End Init Function ----- ***/
+
+/*** ---- Other Functions ----- ***/
+/**
+ * This function returns a value clamped between min and max.
+ * @param {number} min 
+ * @param {number} val 
+ * @param {number} max 
+ * @returns value clamped to [min, max]
+ */
+function clamp(min, val, max) {
+  return (val < min) ? min : (val > max) ? max : val;
+}
+
+// sources:
+// https://stackoverflow.com/questions/25582882/javascript-math-random-normal-distribution-gaussian-bell-curve
+// https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+/**
+ * This function uses Math.random and the box-muller transform
+ * to generate a random number sampled from a gaussian distribution.
+ * @returns pseudorandom number from a normal distribution
+ */
+function gaussianRandom() {
+  const u1 = Math.random();
+  const u2 = Math.random();
+
+  const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  return z0;
+}
+
+
+// Got this function from ChatGPT vvvv
+/**
+ * This function takes two colors and returns the euclidian distance between them
+ * @param {number} rgb1 - array of 3 numbers denoting the [R,G,B] components of a color
+ * @param {number} rgb2 
+ * @returns euclidian distance between two RGB vectors (number)
+ */
+function colorDifference(rgb1, rgb2) {
+  const rDiff = rgb1.R - rgb2.R;
+  const gDiff = rgb1.G - rgb2.G;
+  const bDiff = rgb1.B - rgb2.B;
+
+  const diff =  Math.sqrt(rDiff * rDiff + gDiff * gDiff + bDiff * bDiff);
+  return (diff === NaN) ? 0 : diff;
+}
+
+
+// GPT vvvvv
+function convertCSSColorToRGB(color) {
+  // Extract RGB components from the "rgb()" string
+  const matches = color.match(/\d+/g);
+  if (matches) {
+      return {
+          R: parseInt(matches[0]),
+          G: parseInt(matches[1]),
+          B: parseInt(matches[2])
+      };
+  }
+
+  return null;
+}
+
+
+/**
+ * This funcion takes two colors, the color of the text and the background color of the div
+ * and ensures they are different enough to 
+ * @param {*} textColor 
+ * @param {*} backgroundColor 
+ * @returns array of two elements of the form [newTextColor, backgroundColor]
+ */
+function setAppropriateColors(textColor, backgroundColor) {
+  const textRGB = convertCSSColorToRGB(textColor);
+  const backgroundRGB = convertCSSColorToRGB(backgroundColor);
+
+  if (textRGB === null || backgroundRGB === null) {
+    console.log("setAppropriateColors: Error converting CSS color to RGB array.");
+    return [textColor, backgroundColor];
+  }
+
+  if ( colorDifference(textRGB, backgroundRGB) > 180) { return [textColor, backgroundColor]; }
+
+  else {
+    const negatedTextRGB = { R: 255 - textRGB.R, G: 255 - textRGB.G, B: 255 - textRGB.B};
+
+    if ( colorDifference(negatedTextRGB, backgroundRGB)  < 180) {
+      
+      const black = 'rgb(0,0,0)';
+      const white = 'rgb(255, 255, 255)';
+
+      if (Math.random() < 0.5) { return [black, backgroundColor]; }
+      else { return [white, backgroundColor]; }
+
+    } else {
+      const returnTextRGB = 'rgb(' + negatedTextRGB.R + ',' + negatedTextRGB.G + ',' + negatedTextRGB.B + ')';
+      // const returnBackgroundRGB = 'rgb(' + backgroundRGB.R + ',' + backgroundRGB.G + ',' + backgroundRGB.B + ')';
+      return [returnTextRGB, backgroundColor];
+    }
+  }
+}
+
+// sanity check
+// const TEST_THRESHOLD = 1000;
+// function testGaussRandom() {
+//   const testArr = new Array(TEST_THRESHOLD);
+
+//   for (let i = 0; i < TEST_THRESHOLD; i++ ) {
+//     testArr[i] = gaussianRandom();
+//   }
+
+//   // GPT gave me these two
+//   function calculateMean(numbers) {
+//       const sum = numbers.reduce((acc, num) => acc + num, 0);
+//       return sum / numbers.length;
+//   }
+
+//   function calculateStandardDeviation(numbers) {
+//       const mean = calculateMean(numbers);
+//       const squaredDifferences = numbers.map(num => Math.pow(num - mean, 2));
+//       const meanSquaredDifferences = calculateMean(squaredDifferences);
+//       return Math.sqrt(meanSquaredDifferences);
+//   }
+
+//   console.log(calculateMean(testArr));
+//   console.log(calculateStandardDeviation(testArr));
+// }
+// testGaussRandom();
+/*** ----- End Other Functions ----- ***/

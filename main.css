@@ -6,6 +6,10 @@ header {
   /* line-height: 0px; */
 }
 
+body {
+  background-color: rgb(255, 255, 255);
+}
+
 #displayDiv {
   display: flex;
   flex-wrap: wrap;
@@ -18,4 +22,8 @@ header {
 #nameHeader {
   background-color: black;
   color: lime;
+}
+
+#endingCitation {
+  text-align: center;
 }
