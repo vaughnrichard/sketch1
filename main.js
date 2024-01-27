@@ -230,12 +230,15 @@ function initMobileKeyboard() {
     return;
   }
 
+  const mobilInstr = document.getElementById('instr');
   mobileInput.addEventListener('focus', () => {
     mobileInput.style.opacity = '0%';
+    mobilInstr.textContent = 'Instructions: Simply start typing. Tap the screen to display the text box.';
 
     mobileInput.addEventListener('focusout', () => {
       mobileInput.value = '';
       mobileInput.style.opacity = '100%';
+      mobilInstr.textContent = 'Instructions: Simply start typing.';
     });
   });
 }

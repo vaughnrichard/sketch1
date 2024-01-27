@@ -36,6 +36,15 @@ body {
   color: lime;
 }
 
+#instrDiv {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+/* #mobileInstr {
+  visibility: hidden;
+} */
+
 #endingCitation {
   text-align: center;
 }
