@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<head>
+  <title> RansomType </title>
+  <link rel="stylesheet" href="about.css"></style>
+</head>
+
+<body>
+  <header>
+    <h1> About RansomType </h1> <h1 id="returnHome"> <a id="rHLink" href="../index.html"> Go back </a> </h1>
+  </header>
+
+  <main>
+    <h2> Reason for Creation </h2>
+
+    <p>
+      As mentioned in the header of the Javascript file (and in the footer) this project was completed
+      for a Media Arts and Design (MAAD) course at the University of Chicago. This course is named 
+      Internet Art II and focuses on the creative possibilites enabled through the browser and web.
+    </p>
+
+    <!-- <br> -->
+
+    <p>
+      For this project, we focused on making art with some kind of text generation. 
+    </p>
+
+
+    <h2> Inspiration </h2>
+
+    <p>
+      Given the constraint of text generation, I thought hard for a project that would incorporate this.
+      One thing we covered in this class was how randomness was a common theme in computer generated art,
+      and it was this that got down the path of this project.
+    </p>
+
+    <p>
+      I remebered the classic ransom note from TV / Movies (see <a href="./about.html#fig1"> Fig. 1 </a>). Although
+      the text was deliberate, the crazed styling of them seemed like they could be modeled well by using randomness.
+      Further, the variation in sizing, colors, and spacing seemed like it would be an entertaining project to work on!
+    </p>
+
+    <div id="fig1">
+      <img src="./ransom_note_ex.jpeg" alt="Example of the Ransom Note Style">
+      <p class="subtext"> <a href="https://tvtropes.org/pmwiki/pmwiki.php/Main/CutAndPasteNote"> Source</a> here. </p>
+
+
+    <h2> Methodology </h2>
+
+    <p>
+      I documented the pipeline of how the characters are styled well (at least to my standards) in the Javascript
+      which is avaliable either on my <a href=""> GitHub</a> or viewable in the dev tools here directly. Thus I will
+      not go into depth. Instead I will use this section to document the reason behind my design choices.
+    </p>
+
+    <p> 
+      To achieve the random look of the project, I varied 5 components - text size, color, background color, 
+      tilt of the character, and spacing between them. For all but spacing I used a uniform distribution - 
+      taken by scaling and shifting the Math.random() function - but for spacing I used a gaussian distribution.
+    </p>
+
+    <p>
+      The uniform distribution gives a varied and random appearance to the style. From looking at example notes,
+      I felt they all had this property - a hint at the deranged nature of the adversaries who wrote the note
+      (not that the users of this project are like that though!). However, I wanted to use a gaussian for the
+      spacing between the charactes as I felt this would model human nature better. I thought people would generally
+      place them in the same spacing, but might vary a little bit when placing them. This lends itself well to a gaussian
+      distribution. I also just wanted to experiment with it and found a cool formula to generate a gaussian distribution
+      using Math.random() twice.
+    </p>
+
+  </main>
+
+  <footer>
+    <!-- Simple Reference -->
+    <p id="endingCitation"> Completed for MAAD23632. Contact Vaughn Richard (<a href="vaughnrichard@uchicago.edu">vaughnrichard@uchicago.edu</a>)
+    for any questions about the project. </p>
+  </footer>
+</body>
+
+</html>

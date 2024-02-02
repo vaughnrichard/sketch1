@@ -7,6 +7,12 @@ header {
   width: 100%;
 }
 
+/* Remove styling from hyperlink */
+#aboutLink {
+  color: lime;
+  text-decoration: none; /* Remove default underline */
+}
+
 /* The words div should be a multi-line wrap, which is what this does */
 #words {
   width: 100%;

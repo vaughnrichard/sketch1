@@ -1,0 +1,26 @@
+
+/* make everything go on the same line */
+header {
+  display: flex;
+}
+
+/* place the return label far enough away */
+#returnHome {
+  padding-left: 1in;
+}
+
+/* return home link styling */
+#rHLink {
+  color: lime;
+  background-color: black;
+  text-decoration: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* center the text in there */
+#endingCitation {
+  text-align: center;
+}
