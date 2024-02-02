@@ -1,4 +1,25 @@
-// The magic behind RansomText
+/**
+ * |============================================================================================|
+ * |██████╗  █████╗ ███╗   ██╗███████╗ ██████╗ ███╗   ███╗    ████████╗██╗   ██╗██████╗ ███████╗|
+ * |██╔══██╗██╔══██╗████╗  ██║██╔════╝██╔═══██╗████╗ ████║    ╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝|
+ * |██████╔╝███████║██╔██╗ ██║███████╗██║   ██║██╔████╔██║       ██║    ╚████╔╝ ██████╔╝█████╗  |
+ * |██╔══██╗██╔══██║██║╚██╗██║╚════██║██║   ██║██║╚██╔╝██║       ██║     ╚██╔╝  ██╔═══╝ ██╔══╝  |
+ * |██║  ██║██║  ██║██║ ╚████║███████║╚██████╔╝██║ ╚═╝ ██║       ██║      ██║   ██║     ███████╗|
+ * |╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═╝     ╚═╝       ╚═╝      ╚═╝   ╚═╝     ╚══════╝|
+ * |============================================================================================|
+ * 
+ * This project was developed for MAAD 23632, aka Internet Art II, as an algorithmic text based
+ * art work. The vision was to model an old school "ransom note" you would see on tv - one that
+ * was constructed imperfectly from cut outs from a newspaper / magazine. To achieve this, for each 
+ * character pressed 5 attributes are selected randomly and applied to style said character.
+ * 
+ * This was developed by me (@VaughnRichard). My professor Nicholas Briz provided heavy inspiration
+ * through his teaching in the aforementioned class. Also, of course, ChatGPT, StackOverflow,
+ * and the general internet helped make this a reality.
+ * 
+ * TODO: Implement saving features, about page
+ */
+
 
 /*
 - Workflow:
